@@ -36,6 +36,7 @@ void FillMatrixWithOrderedNumbers(int Arr[3][3]) {
 }
 ```
 * This function fills the 3x3 matrix with ordered numbers from 1 to 9 using nested loops. The Counter variable is incremented with each assignment.
+
 b. Transposing the Matrix
 ```cpp
 void TransposeMatrix(int Arr[3][3]) {
@@ -45,7 +46,8 @@ void TransposeMatrix(int Arr[3][3]) {
 }
 ```
 * This function transposes the matrix by swapping the elements across the diagonal.
-* The outer loop runs only through the upper triangle of the matrix (i < (3 - floor(3 / 2))), ensuring each element is swapped only once. The inner loop starts from i + 1 to avoid swapping elements back to their original positions.
+* The outer loop runs only through the upper triangle of the matrix `(i < (3 - floor(3 / 2)))`, ensuring each element is swapped only once. The inner loop starts from `i + 1` to avoid swapping elements back to their original positions.
+
 c. Printing the Matrix
 ```cpp
 void PrintMatrixContent(int Arr[3][3], string Message) {
