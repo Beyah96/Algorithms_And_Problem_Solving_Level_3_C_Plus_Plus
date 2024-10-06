@@ -20,9 +20,9 @@ string TrimLeft(string Text)
 }
 
 string TrimRight(string Text) {
-	for (int i = Text.length() - 1; i >= 0; i++) 
+	for (int i = Text.length() - 1; i >= 0; i--)
 		if (Text[i] != ' ')
-			return Text.substr(0, i);
+			return Text.substr(0, i + 1);
 	return "";
 }
 
