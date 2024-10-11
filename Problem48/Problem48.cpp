@@ -10,14 +10,14 @@ struct stClient {
 	double AccountBalance;
 };
 
-string ReadText(string Message) {
+string PromptUserInput(const string& Message) {
 	string Text;
 	cout << Message;
 	getline(cin >> ws, Text);
 	return Text;
 }
 
-double ReadDouble(string Message) {
+double PromptPositiveDoubleInput(const string& Message) {
 	double Number;
 	do {
 		cout << Message;
@@ -26,22 +26,22 @@ double ReadDouble(string Message) {
 	return Number;
 }
 
-stClient ReadClientData() {
+stClient CollectClientInfo() {
 	stClient Client;
-	Client.AccountNumber = ReadText("Account Number  : ");
-	Client.PINCode = ReadText("PIN Code        : ");
-	Client.FullName = ReadText("Full Name       : ");
-	Client.PhoneNumber = ReadText("Phone Number    : ");
-	Client.AccountBalance = ReadDouble("Account Balance : ");
+	Client.AccountNumber = PromptUserInput("Account Number  : ");
+	Client.PINCode = PromptUserInput("PIN Code        : ");
+	Client.FullName = PromptUserInput("Full Name       : ");
+	Client.PhoneNumber = PromptUserInput("Phone Number    : ");
+	Client.AccountBalance = PromptPositiveDoubleInput("Account Balance : ");
 	return Client;
 }
 
-string ConvertClientDataToLine(stClient Client, string Delim) {
+string FormatClientData(const stClient& Client, const string& Delim) {
 	return Client.AccountNumber + Delim + Client.PINCode + Delim + Client.FullName + Delim + Client.PhoneNumber + Delim + to_string(Client.AccountBalance);
 }
 
 
-void SaveNewClient(string Text, string FileName) {
+void AppendClientToFile(const string& FileName, const string& Text) {
 	fstream MyFile;
 	MyFile.open(FileName, ios::out | ios::app);
 	if (MyFile.is_open()) {
@@ -50,19 +50,20 @@ void SaveNewClient(string Text, string FileName) {
 	}
 }
 
-void SaveClientsToFile(string FileName, string Delim) {
+void AddClientsToFileLoop(const string& FileName, const string& Delim) {
 	char AddMore;
 	do {
-		system("cls");
 		cout << "Add New Client : " << endl;
-		SaveNewClient(FileName, ConvertClientDataToLine(ReadClientData(), Delim));
+		AppendClientToFile(FileName, FormatClientData(CollectClientInfo(), Delim));
 		cout << "Do you new to add more clients Y (Yes) or N (No) : ";
 		cin >> AddMore;
+
+		system("cls");
 	} while (toupper(AddMore) == 'Y');
 }
 
 
-vector <string> ReadRecordLineFromFile(string FileName, string Delim) {
+vector <string> ReadFileLines(const string& FileName) {
 	fstream MyFile;
 	vector <string> vLines;
 	string Line;
@@ -73,22 +74,39 @@ vector <string> ReadRecordLineFromFile(string FileName, string Delim) {
 	return vLines;
 }
 
-vector <stClient> GetClientsDetails(vector <string> vLines) {
+vector <string> SplitLineToFields(string Line, const string& Delim) {
+	vector <string> vRecord;
+	string sWord;
+	short Pos;
+	while ((Pos = Line.find(Delim)) != string::npos) {
+		sWord = Line.substr(0, Pos);
+		if (sWord != " ")
+			vRecord.push_back(sWord);
+		Line.erase(0, Pos + Delim.length());
+	}
+	if (Line != "")
+		vRecord.push_back(Line);
+	return vRecord;
+}
+
+vector <stClient> ParseClientRecord(const vector <string>& vLines, const string& Delim) {
 	stClient Client;
 	vector <stClient> vClients;
 	for (string Line : vLines) {
-		Client.AccountNumber = Line[0];
-		Client.PINCode = Line[1];
-		Client.FullName = Line[2];
-		Client.PhoneNumber = Line[3];
-		Client.AccountBalance = Line[4];
+		vector <string> ClientDetails = SplitLineToFields(Line, Delim);
+		Client.AccountNumber = ClientDetails[0];
+		Client.PINCode = ClientDetails[1];
+		Client.FullName = ClientDetails[2];
+		Client.PhoneNumber = ClientDetails[3];
+		Client.AccountBalance = stod(ClientDetails[4]);
 		vClients.push_back(Client);
 	}
 	return vClients;
 }
 
 
-void PrintClientDetailsFromLine(vector <stClient> vClients) {
+void DisplayClientList(const vector <stClient>& vClients) {
+	cout << endl << "\t\t\t\tClients list : " << vClients.size() << " clients." << endl;
 	cout << endl << "----------------------------------------------------------------------------------------" << endl;
 	cout << "|" << left << setw(16) << "Account Number";
 	cout << "|" << left << setw(16) << "PIN Code";
@@ -109,7 +127,8 @@ void PrintClientDetailsFromLine(vector <stClient> vClients) {
 	}
 
 int main() {
-	//SaveClientsToFile("Clients.txt", "#//#");
-	PrintClientDetailsFromLine(GetClientsDetails(ReadRecordLineFromFile("Clients.txt", "#//#")));
+	string Delim = "#//#", FileName = "Clients.txt";
+	AddClientsToFileLoop(FileName, Delim);
+	DisplayClientList(ParseClientRecord(ReadFileLines(FileName), Delim));
 	return 0;
 }
