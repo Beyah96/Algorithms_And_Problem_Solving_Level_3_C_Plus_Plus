@@ -74,35 +74,25 @@ vector <string> ReadLinesFromFile(string FileName) {
 }
 
 
-void PrintVectorContent(string FileName) {
-	vector <string> vLines = ReadLinesFromFile(FileName);
-	for (string Line : vLines) {
-		cout << Line << endl;
-	}
-}
-
 vector <string> SplitLineToFields(string Line, string Delim) {
 	vector <string> vLine;
 	string sWord;
 	short Pos;
 	while ((Pos = Line.find(Delim)) != string::npos) {
 		sWord = Line.substr(0, Pos);
-		if (sWord != " ")
-			vLine.push_back(sWord);
+		vLine.push_back(sWord);
 		Line.erase(0, Pos + Delim.length());
 	}
-	if (sWord != "")
-		vLine.push_back(sWord);
+	if (Line != "")
+		vLine.push_back(Line);
 	return vLine;
 }
 
-vector <stClient> ParseClientRecords(string FileName, string Delim) {
+vector <stClient> ParseClientRecords(vector <string> vLines, string Delim) {
 	vector <stClient> vClientsList;
-	vector <string> vLines = ReadLinesFromFile(FileName), ClientDetails;
 	stClient Client;
-
 	for (string& sLine : vLines) {
-		ClientDetails = SplitLineToFields(sLine, Delim);
+		vector <string> ClientDetails = SplitLineToFields(sLine, Delim);
 		Client.AccountNumber = ClientDetails[0];
 		Client.PINCode = ClientDetails[1];
 		Client.FullName = ClientDetails[2];
@@ -113,8 +103,9 @@ vector <stClient> ParseClientRecords(string FileName, string Delim) {
 	return vClientsList;
 }
 
-void PrintClients(string FileName, string Delim) {
-	//cout << endl << "\t\t\t\tClients list : " << vClients.size() << " clients." << endl;
+
+void PrintClients(vector <stClient> vClients) {
+	cout << endl << "\t\t\t\tClients list : " << vClients.size() << " clients." << endl;
 	cout << endl << "----------------------------------------------------------------------------------------" << endl;
 	cout << "|" << left << setw(16) << "Account Number";
 	cout << "|" << left << setw(16) << "PIN Code";
@@ -122,9 +113,8 @@ void PrintClients(string FileName, string Delim) {
 	cout << "|" << left << setw(13) << "Phone Number";
 	cout << "|" << left << setw(16) << "Account Balance" << "|";
 	cout << endl << "----------------------------------------------------------------------------------------" << endl;
-	vector <stClient> vClients = ParseClientRecords(FileName, Delim);
 
-	for (stClient& Client : vClients) {
+	for (stClient Client : vClients) {
 		cout << "|" << left << setw(16) << Client.AccountNumber;
 		cout << "|" << left << setw(16) << Client.PINCode;
 		cout << "|" << left << setw(22) << Client.FullName;
@@ -134,10 +124,34 @@ void PrintClients(string FileName, string Delim) {
 		cout << endl;
 	}
 }
+
+bool IsFound(vector <stClient> vClients, string SearchedAccountNumber) {
+	for (stClient Client : vClients) {
+		if (Client.AccountNumber == SearchedAccountNumber) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void FindClientByAccountNumber(vector <stClient> vClients, string SearchedAccountNumber) {
+	vector <stClient> vTempClient;
+	if (!IsFound(vClients, SearchedAccountNumber))
+		cout << "The client with Account Number " << SearchedAccountNumber << " not found!";
+	else
+		for (stClient Client : vClients)
+			if (Client.AccountNumber == SearchedAccountNumber) {
+				vTempClient.push_back(Client);
+				PrintClients(vTempClient);
+				break;
+			}
+}
+
 int main() {
-	string FileName = "Clients.txt", Delim = "#**//**#";
-	//AppendAllGivenClientsToFile(FileName, Delim);
-	//PrintVectorContent(FileName);
-	PrintClients(FileName, Delim);
+	string FileName = "Clients.txt", Delim = "#**//**#", SearchedAccount = "A10645";
+	AppendAllGivenClientsToFile(FileName, Delim);
+	vector <stClient> vClients = ParseClientRecords(ReadLinesFromFile(FileName), Delim);
+	PrintClients(vClients);
+	FindClientByAccountNumber(vClients, SearchedAccount);
 	return 0;
 }
