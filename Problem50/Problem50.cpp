@@ -163,10 +163,9 @@ vector <stClient> DeleteClientByAccountNumber(vector <stClient> vClients, string
 		cout << "Are you sure you want delete this Account? Y or N ? : ";
 		cin >> DeteteAccount;
 		if (toupper(DeteteAccount) == 'Y') {
-			vector <stClient>::iterator iter;
-			for (iter = vClients.end() - 1; iter <= vClients.begin(); iter--) {
-				if (iter->AccountNumber != DeletedAccountNumber) {
-					vTempClients.push_back(*iter);
+			for (stClient Client : vClients) {
+				if (Client.AccountNumber != DeletedAccountNumber) {
+					vTempClients.push_back(Client);
 				}
 			}
 			cout << "Client Deleted Successfully.";
@@ -180,27 +179,31 @@ vector <stClient> DeleteClientByAccountNumber(vector <stClient> vClients, string
 
 void UpdateFileAfterDelete(string FileName, string Delim, vector <stClient> vClients, string DetetedAccountNumber) {
 	vector <stClient> vTempClients = DeleteClientByAccountNumber(vClients, DetetedAccountNumber);
-	for (stClient& Client : vTempClients){
-		AppendClient(FileName, ConvertClientRecodsToLine(Client, Delim));
+	fstream MyFile;
+	MyFile.open(FileName, ios::out);
+	if (MyFile.is_open()) {
+		for (stClient& Client : vTempClients)
+			MyFile << ConvertClientRecodsToLine(Client, Delim) << endl;
+		MyFile.close();
 	}
 }
 
 
 int main() {
 	string FileName = "Clients.txt", Delim = "#/**/#", SearchedAccountNumber = "A335", DeletedAccountNumber = "A335";
-	vector <stClient> vClients = GetListOfClient(ReadFileLines(FileName), Delim);
 	//AddClientsToFile(FileName, Delim);
 	
 	cout << "Before deleting anything : " << endl;
+	vector <stClient> vClients = GetListOfClient(ReadFileLines(FileName), Delim);
 	DisplayClientsList(vClients);
 	
-	cout << "\n\n Search result: " << endl;
-	FindClientById(vClients, SearchedAccountNumber);
+	//cout << "\n\n Search result: " << endl;
+	//FindClientById(vClients, SearchedAccountNumber);
 	
-	
+	//
 	UpdateFileAfterDelete(FileName, Delim, vClients, DeletedAccountNumber);
 	vClients = GetListOfClient(ReadFileLines(FileName), Delim);
-	
+	//
 	cout << "\n\nAfter deleting an account : " << endl;
 	DisplayClientsList(vClients);
 	return 0;
