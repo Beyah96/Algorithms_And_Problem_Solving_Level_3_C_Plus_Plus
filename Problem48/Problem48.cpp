@@ -68,8 +68,11 @@ vector <string> ReadFileLines(const string& FileName) {
 	vector <string> vLines;
 	string Line;
 	MyFile.open(FileName, ios::in);
-	while (getline(MyFile, Line)) {
-		vLines.push_back(Line);
+	if (MyFile.is_open()){
+		while (getline(MyFile, Line)) {
+			vLines.push_back(Line);
+		}
+		MyFile.close();
 	}
 	return vLines;
 }
