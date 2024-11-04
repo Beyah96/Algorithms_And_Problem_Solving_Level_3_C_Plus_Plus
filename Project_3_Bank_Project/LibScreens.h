@@ -33,6 +33,7 @@ namespace LibScreens {
 		cout << "|" << left << setw(10) << "Pin Code";
 		cout << "|" << left << setw(30) << "Full Name";
 		cout << "|" << left << setw(15) << "Phone Number";
-		cout << "|" << left << setw(16) << "Account balance" << "|";
+		cout << "|" << left << setw(16) << "Account balance" << "|" << endl;
+		cout << " ------------------------------------------------------------------------------------------" << endl;
 	}
 }
