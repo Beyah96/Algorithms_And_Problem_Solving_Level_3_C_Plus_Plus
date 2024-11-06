@@ -4,8 +4,9 @@
 #include <iomanip>
 
 using namespace std;
+
 namespace LibScreens {
-	
+
 	string SetWidth(short Length) {
 		string Width;
 		for (int i = 0; i < Length; i++)
