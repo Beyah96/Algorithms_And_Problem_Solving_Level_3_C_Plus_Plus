@@ -8,7 +8,6 @@ using namespace std;
 int main() {
 	LibScreens::PrintMainMenuScreen();
 	LibScreens::ShowClientListScreen();
-	LibReader::ReadPositiveNumber("Please enter the balance");
-	LibReader::ReadString("Please enter you name");
+	ClientLib::AddingNewLineToFile("Clients.txt", "#//#");
 	return 0;
 }
