@@ -35,4 +35,9 @@ namespace ClientLib {
 			cin >> AddMore;
 		} while (toupper(AddMore) == 'Y');
 	}
+
+
+	void ReadLinesFromFile(string FileName) {
+
+	}
 }
