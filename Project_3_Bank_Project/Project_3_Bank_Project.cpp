@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include "LibScreens.h";
-#include "LibReader.h";
+#include "LibScreens.h"
+#include "LibReaders.h"
 
 using namespace std;
 

@@ -1,12 +1,11 @@
-#pragma once
-
+#pragma onces
 #include <iostream>
 #include <string>
 #include <iomanip>
-#include "LibReader.h";
+#include "LibReaders.h"
 #include <fstream>
 using namespace std;
-
+using namespace LibReaders;
 namespace ClientLib {
 
 	struct stClient {
@@ -30,7 +29,7 @@ namespace ClientLib {
 	void AddingNewLineToFile(string FileName, string Delim) {
 		char AddMore;
 		do {
-			AddNewLineToFile(FileName, ConvertRecordToStringLine(LibReader::ReadClient(), Delim));
+			AddNewLineToFile(FileName, ConvertRecordToStringLine(ReadClient(), Delim));
 			cout << "Do you want to add more clients ? ";
 			cin >> AddMore;
 		} while (toupper(AddMore) == 'Y');

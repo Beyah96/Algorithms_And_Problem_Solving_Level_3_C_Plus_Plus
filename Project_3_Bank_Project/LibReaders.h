@@ -1,13 +1,11 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include "ClientLib.h"
+
 
 using namespace std;
 
-namespace LibReader {
-
-
+namespace LibReaders {
 	string ReadString(string Message) {
 		string Text;
 		cout << Message << " : ";
