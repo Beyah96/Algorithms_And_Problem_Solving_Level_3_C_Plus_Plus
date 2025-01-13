@@ -1,20 +1,36 @@
-// Bank_Project_Procedural_version_1.cpp : Ce fichier contient la fonction 'main'. L'exécution du programme commence et se termine à cet endroit.
-//
-
 #include <iostream>
+#include <string>
+#include <iomanip>
 
-int main()
-{
-    std::cout << "Hello World!\n";
+using namespace std;
+
+
+
+void ShowClientList() {
+	cout << " --------------------------------------------------------------------------------" << endl;
+	cout << "|" << left << setw(14) << "Account Number" << "|" << left << setw(10) << "PIN Code" << "|" << left << setw(30) << "Client Name " << "|" << left << setw(10) << "Phone Number" << "|" << left << setw(10) << "Balance" << "|" << endl;
+	cout << " ----------------------------------------------------------------------" << endl;
 }
 
-// Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
-// Déboguer le programme : F5 ou menu Déboguer > Démarrer le débogage
+void PrintMainMenuScreen() {
+	cout << "======================================" << endl;
+	cout << setw(5) << "Main Menu Screen : " << endl;
+	cout << "======================================" << endl;
+	cout << setw(3) << "[1] Show client list." << endl;
+	cout << setw(3) << "[1] Add New client." << endl;
+	cout << setw(3) << "[1] Delete client." << endl;
+	cout << setw(3) << "[1] Update client info." << endl;
+	cout << setw(3) << "[1] Find client." << endl;
+	cout << setw(3) << "[1] Exit" << endl;
+	cout << "======================================" << endl;
+	cout << "Chose what do you want to do" << endl;
+	//cin >>
+}
 
-// Astuces pour bien démarrer : 
-//   1. Utilisez la fenêtre Explorateur de solutions pour ajouter des fichiers et les gérer.
-//   2. Utilisez la fenêtre Team Explorer pour vous connecter au contrôle de code source.
-//   3. Utilisez la fenêtre Sortie pour voir la sortie de la génération et d'autres messages.
-//   4. Utilisez la fenêtre Liste d'erreurs pour voir les erreurs.
-//   5. Accédez à Projet > Ajouter un nouvel élément pour créer des fichiers de code, ou à Projet > Ajouter un élément existant pour ajouter des fichiers de code existants au projet.
-//   6. Pour rouvrir ce projet plus tard, accédez à Fichier > Ouvrir > Projet et sélectionnez le fichier .sln.
+int main() {
+	ShowClientList();
+	PrintMainMenuScreen();
+
+	system("pause>0");
+	return 0;
+}
