@@ -364,6 +364,13 @@ void ShowDepositScreen() {
 	cout << TabFunction(4) << "======================================" << endl;
 	string AccountNumber = ReadClientAccountNumber();
 	vector <stClient> vClients = LoadClientsFromFile(FileName);
+	stClient Client;
+
+	while (!FindClientByAccountNumber(AccountNumber, vClients, Client)) {
+		cout << "Client with [" << AccountNumber << "] does not exist." << endl;
+		AccountNumber = ReadClientAccountNumber();
+	}
+
 	double DepositAmount = ReadAmount("Please enter Deposit Amount : ");
 	Deposit(AccountNumber, vClients, DepositAmount);
 };
@@ -425,8 +432,6 @@ void PerformingTransactionMenueOption(enTransactions Transaction) {
 		break;
 	case eMainMenue:
 		PrintMainMenueScreen();
-		break;
-	default:
 		break;
 	}
 
