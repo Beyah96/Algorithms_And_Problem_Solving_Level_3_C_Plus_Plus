@@ -307,38 +307,16 @@ void ShowEndScreen() {
 
 void Deposit(string AccountNumber, vector <stClient>& vClients, double DepositAmount) {
 	stClient Client;
-	char ContinueTransaction;
-	if (FindClientByAccountNumber(AccountNumber, vClients, Client)) {
-		PrintClientCard(Client);
+	char ContinueTransaction = 'n';
+	cout << "Are you sure you want to perform this transaction ? y/n : ";
+	cin >> ContinueTransaction;
+	if (toupper(ContinueTransaction) == 'Y'){
 		for (stClient& Client : vClients) 
 			if (Client.AccountNumber == AccountNumber) {
-				cout << "Are you sure you want to perform this transaction ? y/n : ";
-				cin >> ContinueTransaction;
-				if (toupper(ContinueTransaction) == 'Y')
-					Client.Balance += DepositAmount;
+				Client.Balance += DepositAmount;
+				SaveClientsDataToFile(FileName, vClients); 
+				cout << "Done successfully. New Balance is: " << Client.Balance << endl;
 			}
-		SaveClientsDataToFile(FileName, vClients);
-	}
-}
-
-void WithDraw(string AccountNumber, vector <stClient>& vClients, double WithDrawAmount) {
-	stClient Client;
-	char ContinueTransaction;
-	if (FindClientByAccountNumber(AccountNumber, vClients, Client)) {
-		PrintClientCard(Client);
-		for (stClient& Client : vClients)
-			if (Client.AccountNumber == AccountNumber) {
-				if (WithDrawAmount > Client.Balance)
-					cout << "Amount exceeds the balance, you can withdraw up to : " << Client.Balance << endl;
-				else {
-					cout << "Are you sure you want to perform this transaction ? y/n : ";
-					cin >> ContinueTransaction;
-					if (toupper(ContinueTransaction) == 'Y')
-						Client.Balance -= WithDrawAmount;
-				}
-			}
-		
-		SaveClientsDataToFile(FileName, vClients);
 	}
 }
 
@@ -370,7 +348,7 @@ void ShowDepositScreen() {
 		cout << "Client with [" << AccountNumber << "] does not exist." << endl;
 		AccountNumber = ReadClientAccountNumber();
 	}
-
+	PrintClientCard(Client);
 	double DepositAmount = ReadAmount("Please enter Deposit Amount : ");
 	Deposit(AccountNumber, vClients, DepositAmount);
 };
@@ -383,8 +361,20 @@ void ShowWithDrawScreen() {
 	cout << TabFunction(4) << "======================================" << endl;
 	string AccountNumber = ReadClientAccountNumber();
 	vector <stClient> vClients = LoadClientsFromFile(FileName);
-	double WithDrawAmount = ReadAmount("Please enter With Draw Amount : ");
-	WithDraw(AccountNumber, vClients, WithDrawAmount);
+	stClient Client;
+
+	while (!FindClientByAccountNumber(AccountNumber, vClients, Client)) {
+		cout << "Client with [" << AccountNumber << "] does not exist." << endl;
+		AccountNumber = ReadClientAccountNumber();
+	}
+	PrintClientCard(Client);
+	double DepositAmount = ReadAmount("Please enter Deposit Amount : ");
+	while (DepositAmount > Client.Balance) {
+		cout << "Amount exceeds the balance, you can withdraw up to : " << Client.Balance << endl;
+		DepositAmount = ReadAmount("Please enter Deposit Amount : ");
+	}
+
+	Deposit(AccountNumber, vClients, DepositAmount * -1);
 
 };
 
